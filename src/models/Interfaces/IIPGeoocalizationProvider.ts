@@ -5,5 +5,5 @@ export abstract class IIpGeolocalizationProvider{
 
     constructor(public readonly configuration: Configuration){};
 
-    public abstract proceed(address: string): Promise<IPStack.Response>;
+    public abstract proceed(address: string): Promise<IPStack.Response | string>;
 }

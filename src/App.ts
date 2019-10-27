@@ -34,7 +34,7 @@ export class App{
                 .end('You must provide an address to search for!!');
             
             if(!this.geoParamsChecker.isParameterValid(req.params.address))
-            res
+                res
                 .status(400)
                 .end('Address you provide is incorrect!!');
 

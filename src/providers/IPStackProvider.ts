@@ -14,13 +14,14 @@ export class IPStackProvider extends IIpGeolocalizationProvider{
         this.url = configuration.geoProviderURL;
     }
 
-    public proceed(address: string): Promise<IPStack.Response> {
+    public proceed(address: string): Promise<IPStack.Response | string> {
         return new Promise((resolve, reject) => {
             superagent
             .get(`${this.url}${address}`)
             .query({'access_key': this.accessKey})
             .end((err, data) => {
                if (err) reject(err);
+               if (!data.body.type) resolve(`Address: ${address} is not exist!`)
                resolve(data.body as IPStack.Response)
              }); 
         });
