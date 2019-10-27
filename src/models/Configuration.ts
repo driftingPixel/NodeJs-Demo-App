@@ -1,3 +1,4 @@
 export interface Configuration {
-    readonly dataProviderPath: string
+    readonly geoProviderKey: string,
+    readonly geoProviderURL: string
 }
