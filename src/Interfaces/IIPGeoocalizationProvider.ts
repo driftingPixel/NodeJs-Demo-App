@@ -1,4 +1,4 @@
-import { Configuration } from "../Configuration";
+import { Configuration } from "../models/Configuration";
 import { IPStack } from './IPStackResponse'
 
 export abstract class IIpGeolocalizationProvider{

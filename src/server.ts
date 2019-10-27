@@ -1,7 +1,7 @@
 import express from 'express'
 import { ConfigurationReader } from './ConfigurationReader'
 import { log } from './ConfigLogger'
-import { IIpGeolocalizationProvider } from './models/Interfaces/IIPGeoocalizationProvider';
+import { IIpGeolocalizationProvider } from './Interfaces/IIPGeoocalizationProvider';
 import { IPStackProvider } from './providers/IPStackProvider'
 import { App } from './App';
 
