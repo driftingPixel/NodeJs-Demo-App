@@ -6,7 +6,7 @@ export class AppResponse{
     public status: string;
     public data: any;
 
-    constructor(status: string = "", data?: any){
+    constructor(status: string = "", data?: any, storedInDB?: any){
         this.status = status;
         this.data = data;
     }

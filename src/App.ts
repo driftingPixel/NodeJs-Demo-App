@@ -5,6 +5,7 @@ import { Express, Response, Request } from "express-serve-static-core";
 import express from 'express'
 import { GeoParamsChecker } from "./Utility/GeoParamsChecker";
 import { AppResponse } from "./models/AppResponse";
+import mongoose from 'mongoose';
 
 export class App{
 
@@ -12,10 +13,18 @@ export class App{
     private readonly geoParamsChecker: GeoParamsChecker;
     private readonly express: Express;
     
+    
     constructor(configuration: Configuration, ipGeolocalizationProvider: IIpGeolocalizationProvider){
         this.configuration = configuration;
         this.express = express();
         this.geoParamsChecker = new GeoParamsChecker(this.configuration.allowIp, this.configuration.allowUrl);
+        mongoose.connect(configuration.database, {
+            auth: {
+              user: this.configuration.dbUser,
+              password: this.configuration.dbPassword
+            },
+            useNewUrlParser: true
+        }).then(con => console.log("Connection with DB OK!!"));
 
         this.prepareIpGeoEndpoints(this.express, ipGeolocalizationProvider);
         this.prepareOtherEndpoints(this.express);

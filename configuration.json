@@ -3,5 +3,8 @@
     "geoProviderKey": "51539f6b5098b2f73aceeaf5a57963d0",
     "geoProviderURL": "http://api.ipstack.com/",
     "allowIp": true,
-    "allowUrl": true
+    "allowUrl": true,
+    "database": "mongodb://ds251804.mlab.com:51804/heroku_4b62q6d1",
+    "dbUser": "appUser",
+    "dbPassword": "ZA0@12BHaZ?p0O*%zS"
 }
