@@ -1,4 +1,5 @@
 {
+    "serverPort": 3000,
     "geoProviderKey": "51539f6b5098b2f73aceeaf5a57963d0",
     "geoProviderURL": "http://api.ipstack.com/"
 }

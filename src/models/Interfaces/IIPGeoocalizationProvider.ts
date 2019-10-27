@@ -1,6 +1,5 @@
-import { Configuration } from "../models/Configuration";
-import { Dictionary, Request, Response} from "express-serve-static-core";
-import { IPStack } from '../Interfaces/IPStackResponse'
+import { Configuration } from "../Configuration";
+import { IPStack } from './IPStackResponse'
 
 export abstract class IIpGeolocalizationProvider{
 

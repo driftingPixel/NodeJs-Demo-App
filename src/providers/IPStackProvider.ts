@@ -1,6 +1,6 @@
-import { IIpGeolocalizationProvider } from "../Interfaces/IIPGeoocalizationProvider";
+import { IIpGeolocalizationProvider } from "../models/Interfaces/IIPGeoocalizationProvider";
 import { Configuration } from "../models/Configuration";
-import { IPStack } from '../Interfaces/IPStackResponse'
+import { IPStack } from '../models/Interfaces/IPStackResponse'
 import * as superagent from 'superagent';
 
 export class IPStackProvider extends IIpGeolocalizationProvider{
