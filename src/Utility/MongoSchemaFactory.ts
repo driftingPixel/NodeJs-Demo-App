@@ -5,8 +5,12 @@ export class MongoSchemaFactory{
     private static GEOLOCALIZATION_ITEM_SCHEMA = new mongoose.Schema({
         ip:{
             type: String,
-            required: [true, 'Address must have name!!'],
-            unique: [true, 'ip must be unique!!']
+            required: [true, 'Address must have ip!!'],
+            unique: [true, 'IP must be unique!!']
+        },
+        url:{
+            type: String,
+            unique: [true, 'URL must be unique!!']
         },
         type: {
             type: String,
@@ -18,8 +22,7 @@ export class MongoSchemaFactory{
         city: String,
         zipCode: String,
         latitude: Number,
-        longitude: Number,
-        lastSearch: Date
+        longitude: Number
     });
     
     public static  getGeoLocalizationSchema(){
