@@ -58,34 +58,22 @@ export class App{
     }
 
     private methodPostIpGeoApi(req: Request, res: Response){
-
         if(!req.body.address)
-        this.failResponse(`Address parameter can't be empty`, res, 400);
-        if(!this.geoParamsChecker.isParameterValid(req.body.address))
-            this.failResponse('Address you provide is incorrect!!', res, 400);
-        
-        this.ipGeolocalizationProvider.proceed(req.body.address, true)
-            .then((data) => {
-                res.send(new AppResponse(AppResponse.OK, data).toString())
-            })
-            .catch((error) => {
-                log.error('ERROR', error);
-                this.failResponse(error.message, res, 500);
-            })
+            this.failResponse(`Address parameter can't be empty`, res, 400);
+        this.proceedLookupRequest(req, res, req.body.address, true);
     }
 
     private async methodGetIpGeoAddress(req: Request, res: Response){
-            
-        //TODO this if is unnecessary. Should check this path.
-        if(!req.params.address) 
-            this.failResponse('You must provide an address to search for!!', res, 400);
-        
-        if(!this.geoParamsChecker.isParameterValid(req.params.address))
+        this.proceedLookupRequest(req, res, req.params.address, false);
+    }
+
+    private proceedLookupRequest(req: Request, res: Response, address: string, saveToDB: boolean){
+        if(!this.geoParamsChecker.isParameterValid(address))
             this.failResponse('Address you provide is incorrect!!', res, 400);
-            
-        this.ipGeolocalizationProvider.proceed(req.params.address, false)
+    
+        this.ipGeolocalizationProvider.proceed(address, saveToDB)
         .then((data) => {
-            res.end(new AppResponse(AppResponse.OK, data).toString())
+            res.send(new AppResponse(AppResponse.OK, data).toString())
         })
         .catch((error) => {
             log.error('ERROR', error);

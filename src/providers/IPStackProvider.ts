@@ -41,7 +41,7 @@ export class IPStackProvider extends IIpGeolocalizationProvider{
             log.info("connect to DB properly.");
             this.dbAvailable = true;})
         .catch((error: any) => {
-            log.error('ERROR', error);
+            log.error('DB Connection error!', error );
             this.dbAvailable = false;
         })
     }

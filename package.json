@@ -44,7 +44,8 @@
             "node_modules"
         ],
         "watch": [
-            "src"
+            "src",
+            "configuration.json"
         ],
         "exec": "npm start",
         "ext": "ts"
