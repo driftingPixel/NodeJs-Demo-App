@@ -2,7 +2,7 @@
     "name": "nodejs-demo-app",
     "version": "1.0.0",
     "description": "NodeJs demo app",
-    "main": "index.js",
+    "main": "./dist/server.js",
     "scripts": {
         "start": "node --inspect=5858 -r ts-node/register ./src/server.ts",
         "start:watch": "nodemon",
