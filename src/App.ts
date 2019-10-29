@@ -1,27 +1,30 @@
 import { IIpGeolocalizationProvider } from './Interfaces/IIPGeoocalizationProvider';
 import { Configuration } from './models/Configuration';
 import { log } from './ConfigLogger';
-import { Express, Response, Request } from 'express-serve-static-core';
+import { Express, Response, Request, NextFunction } from 'express-serve-static-core';
 import express from 'express';
-import { GeoParamsChecker } from './Utility/GeoParamsChecker';
+import { ParamsChecker } from './Utility/ParamsChecker';
 import { AppResponse } from './models/AppResponse';
 import { MongoDBProvider } from './Utility/MongoDBProvider';
 import { IDBProvider } from './Interfaces/IDBProvider';
 import { Mongoose } from 'mongoose';
 import request from 'superagent';
+import { AuthController } from './controllers/AuthController';
 
 export class App {
     private configuration: Configuration;
-    private readonly geoParamsChecker: GeoParamsChecker;
+    private readonly paramsChecker: ParamsChecker;
     private readonly expressApp: Express;
     private ipGeolocalizationProvider: IIpGeolocalizationProvider;
+    private authController: AuthController;
 
     constructor(configuration: Configuration, ipGeolocalizationProvider: IIpGeolocalizationProvider) {
         this.configuration = configuration;
         this.ipGeolocalizationProvider = ipGeolocalizationProvider;
+        this.paramsChecker = new ParamsChecker(this.configuration.allowIp, this.configuration.allowUrl);
+        this.authController = new AuthController(this.paramsChecker);
         this.expressApp = express();
         this.addMiddleware(this.expressApp);
-        this.geoParamsChecker = new GeoParamsChecker(this.configuration.allowIp, this.configuration.allowUrl);
 
         this.prepareRouting();
 
@@ -32,11 +35,17 @@ export class App {
 
     private prepareRouting() {
         this.expressApp.route('/').get((req: Request, res: Response) => res.send('IpGeo service available on /ipgeo'));
+        this.expressApp.route('/login').post((req: Request, res: Response) => this.authController.login(req, res));
+
         this.expressApp
             .route('/ipgeo')
             .get((req: Request, res: Response) => res.send('API is working good ;).'))
-            .post((req: Request, res: Response) => this.methodPostIpGeoApi(req, res))
+            .post(
+                (req: Request, res: Response, next: NextFunction) => this.authController.isUserLogIn(req, res, next),
+                (req: Request, res: Response) => this.methodPostIpGeoApi(req, res)
+            )
             .put((req: Request, res: Response) => this.methodPutIpGeo(req, res));
+
         this.expressApp
             .route('/ipgeo/:address')
             .get((req: Request, res: Response) => this.methodGetIpGeoAddress(req, res))
@@ -46,6 +55,11 @@ export class App {
 
     private addMiddleware(expressApp: Express) {
         this.expressApp.use(express.json());
+        this.expressApp.use((req: Request, response: Response, next: NextFunction) => {
+            log.info(`Headers: ${JSON.stringify(req.headers)}`);
+
+            next();
+        });
     }
 
     private failResponse(errorMessage: string, res: Response, responseCode: number) {
@@ -84,7 +98,7 @@ export class App {
     }
 
     private proceedLookupRequest(req: Request, res: Response, lookUpAddress: string, saveToDB: boolean) {
-        if (!this.geoParamsChecker.isParameterValid(lookUpAddress))
+        if (!this.paramsChecker.isParameterValid(lookUpAddress))
             this.failResponse('Address you provide is incorrect!!', res, 400);
 
         this.ipGeolocalizationProvider
