@@ -18,6 +18,7 @@ export class MongoDBProvider implements IDBProvider<Mongoose> {
                 password: this.configuration.dbPassword,
             },
             useNewUrlParser: true,
+            useUnifiedTopology: true,
         });
     }
 
