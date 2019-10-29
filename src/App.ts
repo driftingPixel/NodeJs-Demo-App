@@ -28,7 +28,7 @@ export class App {
 
         this.prepareRouting();
 
-        this.expressApp.listen(this.configuration.serverPort, () => {
+        this.expressApp.listen(this.configuration.serverPort || 5000, () => {
             console.log(`Server is running in http://localhost:${this.configuration.serverPort}`);
         });
     }
