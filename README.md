@@ -2,16 +2,19 @@
 
 Small project in nodeJs
 
-###Technology stack
+### Technology stack
+
 NodeJs, Typescript, Express, mongoDB + Mongoose, JWT
 
-###Test app
+### Test app
+
 https://nodejs-demo-app-rg.herokuapp.com/
 
-###Description
+### Description
+
 Simple RESTFull api, wrapper for ipstack.com
 
-###API Endpoints
+### API Endpoints
 
 #### /login
 
