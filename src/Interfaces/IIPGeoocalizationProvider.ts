@@ -1,6 +1,9 @@
 import { Configuration } from '../models/Configuration';
-import { IPStack } from './IPStackResponse';
+import { IPStack } from '../models/IPStackResponse';
 
+/**
+ * Interface for Geolocalization providers
+ */
 export abstract class IIpGeolocalizationProvider {
     constructor(public readonly configuration: Configuration) {}
 
@@ -8,4 +11,5 @@ export abstract class IIpGeolocalizationProvider {
     public abstract delete(address: string): Promise<any>;
     public abstract put(address: string): Promise<any>;
     public abstract getItem(address: string): Promise<any>;
+    public abstract patch(address: string, body: any): Promise<any>;
 }

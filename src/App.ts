@@ -11,7 +11,13 @@ import { Mongoose } from 'mongoose';
 import request from 'superagent';
 import { AuthController } from './controllers/AuthController';
 
+/**
+ * Main App
+ */
 export class App {
+    /**
+     * Configuration from configuration.json file
+     */
     private configuration: Configuration;
     private readonly paramsChecker: ParamsChecker;
     private readonly expressApp: Express;
@@ -33,6 +39,9 @@ export class App {
         });
     }
 
+    /**
+     * Definition of all routs for express app
+     */
     private prepareRouting() {
         this.expressApp.route('/').get((req: Request, res: Response) => res.send('IpGeo service available on /ipgeo'));
         this.expressApp.route('/login').post((req: Request, res: Response) => this.authController.login(req, res));
@@ -44,20 +53,35 @@ export class App {
                 (req: Request, res: Response, next: NextFunction) => this.authController.isUserLogIn(req, res, next),
                 (req: Request, res: Response) => this.methodPostIpGeoApi(req, res)
             )
-            .put((req: Request, res: Response) => this.methodPutIpGeo(req, res));
+            .put(
+                (req: Request, res: Response, next: NextFunction) => this.authController.isUserLogIn(req, res, next),
+                (req: Request, res: Response) => this.methodPutIpGeo(req, res)
+            );
 
         this.expressApp
             .route('/ipgeo/:address')
-            .get((req: Request, res: Response) => this.methodGetIpGeoAddress(req, res))
-            .delete((req: Request, res: Response) => this.methodDeleteIpGeoAddress(req, res));
-        // .put((req: Request, res: Response) => this.methodPutIpGeo(req, res));
+            .get(
+                (req: Request, res: Response, next: NextFunction) => this.authController.isUserLogIn(req, res, next),
+                (req: Request, res: Response) => this.methodGetIpGeoAddress(req, res)
+            )
+            .delete(
+                (req: Request, res: Response, next: NextFunction) => this.authController.isUserLogIn(req, res, next),
+                (req: Request, res: Response) => this.methodDeleteIpGeoAddress(req, res)
+            )
+            .put(
+                (req: Request, res: Response, next: NextFunction) => this.authController.isUserLogIn(req, res, next),
+                (req: Request, res: Response) => this.methodPutIpGeoAddress(req, res)
+            );
     }
 
+    /**
+     *
+     * @param expressApp Add express middlewars
+     */
     private addMiddleware(expressApp: Express) {
         this.expressApp.use(express.json());
         this.expressApp.use((req: Request, response: Response, next: NextFunction) => {
             log.info(`Headers: ${JSON.stringify(req.headers)}`);
-
             next();
         });
     }
@@ -87,6 +111,14 @@ export class App {
             .put(req.body.address)
             .then(result => res.send(new AppResponse(AppResponse.OK, { result: result }).toString()))
             .catch(error => this.failResponse(error.errorMessage, res, 500));
+    }
+
+    private methodPutIpGeoAddress(req: Request, res: Response) {
+        if (!req.params.address) this.failResponse(`Address parameter can't be empty`, res, 400);
+        this.ipGeolocalizationProvider
+            .patch(req.params.address, req.body)
+            .then(result => res.send(new AppResponse(AppResponse.OK, { result: result }).toString()))
+            .catch(error => this.failResponse(error, res, 500));
     }
 
     private methodDeleteIpGeoAddress(req: Request, res: Response) {

@@ -5,11 +5,18 @@ import { Express, Response, Request } from 'express-serve-static-core';
 import { ParamsChecker } from '../Utility/ParamsChecker';
 import { Controller } from './Controller';
 
+/**
+ * Auth Controller for auth staff
+ */
 export class AuthController extends Controller {
     constructor(private paramsChecker: ParamsChecker) {
         super();
     }
 
+    /**
+     * Log in method.
+     * Return JWT token in response.
+     */
     public login(req: Request, res: Response) {
         const { email, password } = req.body;
 
@@ -29,6 +36,13 @@ export class AuthController extends Controller {
         }
     }
 
+    /**
+     * Methods check is User Log in.
+     * Middleware for every endpoint with autorization.
+     * @param req
+     * @param res
+     * @param next
+     */
     public async isUserLogIn(req: Request, res: Response, next: any) {
         let token = '';
         if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {

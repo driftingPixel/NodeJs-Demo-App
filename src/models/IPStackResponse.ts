@@ -1,5 +1,7 @@
+/**
+ * Module for IPStack response
+ */
 export module IPStack {
-
     export interface Language {
         code: string;
         name: string;
@@ -32,5 +34,4 @@ export module IPStack {
         longitude: number;
         location: Location;
     }
-
 }

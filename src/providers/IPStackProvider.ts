@@ -1,11 +1,14 @@
 import { IIpGeolocalizationProvider } from '../Interfaces/IIPGeoocalizationProvider';
 import { Configuration } from '../models/Configuration';
-import { IPStack } from '../Interfaces/IPStackResponse';
+import { IPStack } from '../models/IPStackResponse';
 import * as superagent from 'superagent';
 import { IDBProvider } from '../Interfaces/IDBProvider';
 import { MongoDBProvider } from '../Utility/MongoDBProvider';
 import { log } from '../ConfigLogger';
 
+/**
+ * Provider for IPGeolocalization, base on IPStack
+ */
 export class IPStackProvider extends IIpGeolocalizationProvider {
     private accessKey: string;
     private url: string;
@@ -33,7 +36,7 @@ export class IPStackProvider extends IIpGeolocalizationProvider {
                     if (saveToDb)
                         this.dbProvider
                             .save(response, lookupAddress)
-                            .then(saveDocument => resolve(response))
+                            .then(saveDocument => resolve(saveDocument))
                             .catch(error => reject(new Error(`Error during save to DB: ${error}`)));
                     else resolve(response);
                 });
@@ -63,6 +66,10 @@ export class IPStackProvider extends IIpGeolocalizationProvider {
                         .catch(error => reject(new Error(`Error during save to DB: ${error}`)));
                 });
         });
+    }
+
+    public patch(address: string, itemData: any): Promise<any> {
+        return this.dbProvider.patch(address, itemData);
     }
 
     private tryDBConnect() {
