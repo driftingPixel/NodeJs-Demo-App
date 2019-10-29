@@ -21,13 +21,16 @@ Simple RESTFull api, wrapper for ipstack.com
 -   <strong>POST</strong>
     Logging in to get a JWT token.
     <strong> Request format: </strong>
+
     ```
     {
         "email": "email@domain.com",
         "password": "password"
     }
     ```
+
     <strong> Response format: </strong>
+
     ```
     {
         "status": "OK",
@@ -63,12 +66,15 @@ Simple RESTFull api, wrapper for ipstack.com
 -   <strong>PUT</strong>
     Save address to db, rewrite data if exist
     <strong> Request format: </strong>
+
     ```
     {
         "address": "address or ip",
     }
     ```
+
     <strong> Response format: </strong>
+
     ```
     {
         "status":"OK",
@@ -78,10 +84,11 @@ Simple RESTFull api, wrapper for ipstack.com
     }
     ```
 
-####/ipgeo/:address
+#### /ipgeo/:address
 
 -   <strong>GET</strong>
     <strong> Response format: </strong>
+
     ```
     {
         "status":"OK",
@@ -91,6 +98,7 @@ Simple RESTFull api, wrapper for ipstack.com
         }
     }
     ```
+
 -   <strong>DELETE</strong>
     Delete docuemnt from db, if exist for specific address or ip.
     ```
@@ -106,13 +114,16 @@ Simple RESTFull api, wrapper for ipstack.com
 -   <strong>PUT</strong>
     Update part of data in db, for specific addres or ip
     <strong> Request example: </strong>
+
     ```
     {
         "regionCode": "DOL",
         "city": "Wrocław"
     }
     ```
+
     <strong> Response format: </strong>
+
     ```
     {
         "status":"OK",
@@ -160,7 +171,9 @@ npm start - start builded version
 
 ### Authorisation
 
-App use authorisation by JWT token from </strong> node jsonwebtoken</strong> library with expparation time.
+App use authorisation by JWT token from </strong> node jsonwebtoken</strong> library with expparation time. Credentials in <strong>config.env</strong> file.
 //TODO change hardcoded credentials and add sign up endpoint.
-####Signing request
-Request must be signing by token in request <strong>Autorization</strong> Header.
+
+#### Signing request
+
+Request must be signing by token in request <strong>Autorization</strong> Header with 'Bearer' prefix.
